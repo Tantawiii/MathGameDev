@@ -2,25 +2,25 @@
 #include <vector>
 #include <iostream>
 
-const float startHeight = 500;
+const float groundLevel = 500;
 const float jumpHeight = 200;
 const float jumpDuration = 1.0f;
 const float windowWidth = 800;
 const float windowHeight = 600;
-float a, b, c;
+float quadraticA, quadraticB, quadraticC;
 
-void calculateQuadraticCoefficients() {
+void calculateJumpCoefficients() {
     float t1 = 0.0f;
     float t2 = 0.5f;
     float t3 = 1.0f;
 
-    float f1 = startHeight;
-    float f2 = startHeight - jumpHeight;
-    float f3 = startHeight;
+    float y1 = groundLevel;
+    float y2 = groundLevel - jumpHeight;
+    float y3 = groundLevel;
 
-    c = f1;
-    b = (f2 - f1 - (t2 * t2 - t1 * t1) * (f3 - f1) / (t3 * t3 - t1 * t1)) / (t2 - t1);
-    a = (f3 - f1 - b * (t3 - t1)) / (t3 * t3 - t1 * t1);
+    quadraticC = y1;
+    quadraticB = (y2 - y1 - (t2 * t2 - t1 * t1) * (y3 - y1) / (t3 * t3 - t1 * t1)) / (t2 - t1);
+    quadraticA = (y3 - y1 - quadraticB * (t3 - t1)) / (t3 * t3 - t1 * t1);
 }
 
 sf::Vector2f lerp(const sf::Vector2f& start, const sf::Vector2f& end, float t) {
@@ -28,44 +28,46 @@ sf::Vector2f lerp(const sf::Vector2f& start, const sf::Vector2f& end, float t) {
 }
 
 int main() {
-    calculateQuadraticCoefficients();
+    calculateJumpCoefficients();
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Parallax Jump with Sprite");
     window.setFramerateLimit(20);
 
-    sf::Texture backgroundTexture1, backgroundTexture2, backgroundTexture3, backgroundTexture4;
-    backgroundTexture1.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_1.png");
-    backgroundTexture2.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_2.png");
-    backgroundTexture3.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_3.png");
-    backgroundTexture4.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_4.png");
+    // Load background textures for parallax layers
+    sf::Texture parallaxTexture1, parallaxTexture2, parallaxTexture3, parallaxTexture4;
+    parallaxTexture1.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_1.png");
+    parallaxTexture2.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_2.png");
+    parallaxTexture3.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_3.png");
+    parallaxTexture4.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_4.png");
 
-    sf::Sprite layer1(backgroundTexture1);
-    sf::Sprite layer2(backgroundTexture2);
-    sf::Sprite layer3(backgroundTexture3);
-    sf::Sprite layer4(backgroundTexture4);
+    sf::Sprite layer1(parallaxTexture1);
+    sf::Sprite layer2(parallaxTexture2);
+    sf::Sprite layer3(parallaxTexture3);
+    sf::Sprite layer4(parallaxTexture4);
 
-    layer1.setScale(windowWidth / backgroundTexture1.getSize().x, windowHeight / backgroundTexture1.getSize().y);
-    layer2.setScale(windowWidth / backgroundTexture2.getSize().x, windowHeight / backgroundTexture2.getSize().y);
-    layer3.setScale(windowWidth / backgroundTexture3.getSize().x, windowHeight / backgroundTexture3.getSize().y);
-    layer4.setScale(windowWidth / backgroundTexture4.getSize().x, windowHeight / backgroundTexture4.getSize().y);
+    layer1.setScale(windowWidth / parallaxTexture1.getSize().x, windowHeight / parallaxTexture1.getSize().y);
+    layer2.setScale(windowWidth / parallaxTexture2.getSize().x, windowHeight / parallaxTexture2.getSize().y);
+    layer3.setScale(windowWidth / parallaxTexture3.getSize().x, windowHeight / parallaxTexture3.getSize().y);
+    layer4.setScale(windowWidth / parallaxTexture4.getSize().x, windowHeight / parallaxTexture4.getSize().y);
 
-    float layer1Speed = 10.0f, layer2Speed = 20.0f, layer3Speed = 30.0f, layer4Speed = 40.0f;
+    float layer1ScrollSpeed = 10.0f, layer2ScrollSpeed = 20.0f, layer3ScrollSpeed = 30.0f, layer4ScrollSpeed = 40.0f;
     float layer1Offset = 0.0f, layer2Offset = 0.0f, layer3Offset = 0.0f, layer4Offset = 0.0f;
 
+    // Load adventurer jump animation textures
     sf::Texture adventurerTextures[4];
     adventurerTextures[0].loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/adventurer-jump-00.png");
     adventurerTextures[1].loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/adventurer-jump-01.png");
     adventurerTextures[2].loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/adventurer-jump-02.png");
     adventurerTextures[3].loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/adventurer-jump-03.png");
 
-    sf::Sprite adventurerSprite(adventurerTextures[0]);
-    adventurerSprite.setPosition(20, startHeight);
-    adventurerSprite.setScale(2.0f, 2.0f);
+    sf::Sprite adventurer(adventurerTextures[0]);
+    adventurer.setPosition(20, groundLevel);
+    adventurer.setScale(2.0f, 2.0f);
 
     bool isJumping = false;
-    float elapsedTime = 0.0f;
-    int frameIndex = 0;
-    sf::Clock frameClock;
+    float jumpElapsedTime = 0.0f;
+    int currentFrame = 0;
+    sf::Clock animationClock;
     sf::Clock parallaxClock;
 
     while (window.isOpen()) {
@@ -77,17 +79,17 @@ int main() {
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
                 if (!isJumping) {
                     isJumping = true;
-                    elapsedTime = 0.0f;
-                    frameIndex = 0;
+                    jumpElapsedTime = 0.0f;
+                    currentFrame = 0;
                 }
             }
         }
 
         float deltaTime = parallaxClock.restart().asSeconds();
-        layer1Offset -= layer1Speed * deltaTime;
-        layer2Offset -= layer2Speed * deltaTime;
-        layer3Offset -= layer3Speed * deltaTime;
-        layer4Offset -= layer4Speed * deltaTime;
+        layer1Offset -= layer1ScrollSpeed * deltaTime;
+        layer2Offset -= layer2ScrollSpeed * deltaTime;
+        layer3Offset -= layer3ScrollSpeed * deltaTime;
+        layer4Offset -= layer4ScrollSpeed * deltaTime;
 
         float layer1Width = layer1.getLocalBounds().width * layer1.getScale().x;
         float layer2Width = layer2.getLocalBounds().width * layer2.getScale().x;
@@ -100,21 +102,21 @@ int main() {
         if (layer4Offset <= -layer4Width) layer4Offset += layer4Width;
 
         if (isJumping) {
-            elapsedTime += 1.0f / 20.0f;
+            jumpElapsedTime += 1.0f / 20.0f;
 
-            if (frameClock.getElapsedTime().asSeconds() > 0.1f) {
-                frameIndex = (frameIndex + 1) % 4; 
-                adventurerSprite.setTexture(adventurerTextures[frameIndex]);
-                frameClock.restart();
+            if (animationClock.getElapsedTime().asSeconds() > 0.1f) {
+                currentFrame = (currentFrame + 1) % 4;
+                adventurer.setTexture(adventurerTextures[currentFrame]);
+                animationClock.restart();
             }
 
-            float yPosition = a * elapsedTime * elapsedTime + b * elapsedTime + c;
-            adventurerSprite.setPosition(20, yPosition);
+            float yPosition = quadraticA * jumpElapsedTime * jumpElapsedTime + quadraticB * jumpElapsedTime + quadraticC;
+            adventurer.setPosition(20, yPosition);
 
-            if (elapsedTime >= jumpDuration) {
+            if (jumpElapsedTime >= jumpDuration) {
                 isJumping = false;
-                adventurerSprite.setPosition(20, startHeight);
-                adventurerSprite.setTexture(adventurerTextures[0]);
+                adventurer.setPosition(20, groundLevel);
+                adventurer.setTexture(adventurerTextures[0]);
             }
         }
 
@@ -140,7 +142,7 @@ int main() {
         layer4.setPosition(layer4Offset + layer4Width, 0);
         window.draw(layer4);
 
-        window.draw(adventurerSprite);
+        window.draw(adventurer);
 
         window.display();
     }
