@@ -141,6 +141,7 @@
     <ClCompile Include="JumpMaIn.cpp" />
     <ClCompile Include="Mirror.cpp" />
     <ClCompile Include="PacmanGameMain.cpp" />
+    <ClCompile Include="ParallexandJump.cpp" />
     <ClCompile Include="ParallexMain.cpp" />
     <ClCompile Include="Trail.cpp" />
   </ItemGroup>

@@ -6,10 +6,10 @@
 //    window.setFramerateLimit(60);
 //
 //    sf::Texture backgroundTexture1, backgroundTexture2, backgroundTexture3, backgroundTexture4;
-//    if (!backgroundTexture1.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/SfmlTests/MathDay1/SfmlTests/background_1.png") ||
-//        !backgroundTexture2.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/SfmlTests/MathDay1/SfmlTests/background_2.png") ||
-//        !backgroundTexture3.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/SfmlTests/MathDay1/SfmlTests/background_3.png") ||
-//        !backgroundTexture4.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/SfmlTests/MathDay1/SfmlTests/background_4.png")) {
+//    if (!backgroundTexture1.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_1.png") ||
+//        !backgroundTexture2.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_2.png") ||
+//        !backgroundTexture3.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_3.png") ||
+//        !backgroundTexture4.loadFromFile("C:/Users/omart/OneDrive/Documents/GitHub/MathGameDev/SfmlTests/background_4.png")) {
 //        return -1;
 //    }
 //
