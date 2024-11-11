@@ -1,39 +1,39 @@
 //#include <SFML/Graphics.hpp>
 //#include <iostream>
 //
-//const float startHeight = 550;
-//const float jumpHeight = 700;
-//const float jumpDuration = 1.0f;
+//const float groundLevelY = 550;
+//const float maxJumpHeight = 700;
+//const float jumpTotalDuration = 1.0f;
 //
-//float a, b, c;
+//float quadraticA, quadraticB, quadraticC;
 //
-//void calculateQuadraticCoefficients() {
-//    float t1 = 0.0f;
-//    float t2 = 0.5f;
-//    float t3 = 1.0f;
+//void calculateJumpCoefficients() {
+//    float timeAtStart = 0.0f;
+//    float timeAtPeak = 0.5f;
+//    float timeAtEnd = 1.0f;
 //
-//    float f1 = startHeight;
-//    float f2 = startHeight - jumpHeight;
-//    float f3 = startHeight;
+//    float heightAtStart = groundLevelY;
+//    float heightAtPeak = groundLevelY - maxJumpHeight;
+//    float heightAtEnd = groundLevelY;
 //
-//    c = f1;
-//    b = (f2 - f1 - (t2 * t2 - t1 * t1) * (f3 - f1) / (t3 * t3 - t1 * t1)) / (t2 - t1);
-//    a = (f3 - f1 - b * (t3 - t1)) / (t3 * t3 - t1 * t1);
+//    quadraticC = heightAtStart;
+//    quadraticB = (heightAtPeak - heightAtStart - (timeAtPeak * timeAtPeak - timeAtStart * timeAtStart) * (heightAtEnd - heightAtStart) / (timeAtEnd * timeAtEnd - timeAtStart * timeAtStart)) / (timeAtPeak - timeAtStart);
+//    quadraticA = (heightAtEnd - heightAtStart - quadraticB * (timeAtEnd - timeAtStart)) / (timeAtEnd * timeAtEnd - timeAtStart * timeAtStart);
 //}
 //
 //int main() {
-//    calculateQuadraticCoefficients();
+//    calculateJumpCoefficients();
 //
 //    sf::RenderWindow window(sf::VideoMode(800, 600), "Jump");
 //    window.setFramerateLimit(60);
 //
-//    sf::CircleShape circle(20.f);
-//    circle.setFillColor(sf::Color::Blue);
-//    circle.setOrigin(circle.getRadius(), circle.getRadius());
-//    circle.setPosition(400, startHeight);
+//    sf::CircleShape jumper(20.f);
+//    jumper.setFillColor(sf::Color::Blue);
+//    jumper.setOrigin(jumper.getRadius(), jumper.getRadius());
+//    jumper.setPosition(400, groundLevelY);
 //
 //    bool isJumping = false;
-//    float elapsedTime = 0.0f;
+//    float jumpElapsedTime = 0.0f;
 //
 //    while (window.isOpen()) {
 //        sf::Event event;
@@ -44,25 +44,25 @@
 //            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 //                if (!isJumping) {
 //                    isJumping = true;
-//                    elapsedTime = 0.0f;
+//                    jumpElapsedTime = 0.0f;
 //                }
 //            }
 //        }
 //
 //        if (isJumping) {
-//            elapsedTime += 1.0f / 60.0f;
+//            jumpElapsedTime += 1.0f / 60.0f;
 //
-//            float yPosition = a * elapsedTime * elapsedTime + b * elapsedTime + c;
-//            circle.setPosition(400, yPosition);
+//            float yPosition = quadraticA * jumpElapsedTime * jumpElapsedTime + quadraticB * jumpElapsedTime + quadraticC;
+//            jumper.setPosition(400, yPosition);
 //
-//            if (elapsedTime >= jumpDuration) {
+//            if (jumpElapsedTime >= jumpTotalDuration) {
 //                isJumping = false;
-//                circle.setPosition(400, startHeight);
+//                jumper.setPosition(400, groundLevelY);
 //            }
 //        }
 //
 //        window.clear(sf::Color::Black);
-//        window.draw(circle);
+//        window.draw(jumper);
 //        window.display();
 //    }
 //
